@@ -46,7 +46,7 @@ int wd_close(watchdog_t wd)
     return 0;
 }
 
-int wd_gettimeout(watchdog_t wd, unsigned int *timeout)
+int wd_get_timeout(watchdog_t wd, unsigned int *timeout)
 {
     int ret;
 
@@ -59,7 +59,7 @@ int wd_gettimeout(watchdog_t wd, unsigned int *timeout)
     return 0;
 }
 
-int wd_settimeout(watchdog_t wd, unsigned int timeout)
+int wd_set_timeout(watchdog_t wd, unsigned int timeout)
 {
     int ret;
 

@@ -11,7 +11,7 @@ int main(void)
     if (wd == -1)
         return 1;
 
-    ret = wd_gettimeout(wd, &timeout);
+    ret = wd_get_timeout(wd, &timeout);
     if (ret)
         return 1;
 

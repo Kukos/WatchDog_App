@@ -38,7 +38,7 @@ int wd_close(watchdog_t wd);
     0 iff success
     Non-zero iff failure
 */
-int wd_gettimeout(watchdog_t wd, unsigned int *timeout);
+int wd_get_timeout(watchdog_t wd, unsigned int *timeout);
 
 /*
     Set Watchdog Timeout
@@ -51,7 +51,7 @@ int wd_gettimeout(watchdog_t wd, unsigned int *timeout);
     0 iff success
     Non-zero iff failure
 */
-int wd_settimeout(watchdog_t wd, unsigned int timeout);
+int wd_set_timeout(watchdog_t wd, unsigned int timeout);
 
 /*
     Feed Watchdog

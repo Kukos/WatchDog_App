@@ -53,4 +53,16 @@ int wd_gettimeout(watchdog_t wd, unsigned int *timeout);
 */
 int wd_settimeout(watchdog_t wd, unsigned int timeout);
 
+/*
+    Feed Watchdog
+
+    PARAMS
+    @IN wd - watchdog descriptor
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+*/
+int wd_keepalive(watchdog_t wd);
+
 #endif

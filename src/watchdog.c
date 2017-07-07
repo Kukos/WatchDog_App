@@ -71,3 +71,16 @@ int wd_settimeout(watchdog_t wd, unsigned int timeout)
 
     return 0;
 }
+
+int wd_keepalive(watchdog_t wd)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_KEEPALIVE, NULL);
+    if (ret)
+        WD_ERROR("Cannot feed watchdog\n", ret, "");
+
+    return 0;
+}

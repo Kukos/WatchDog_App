@@ -91,4 +91,17 @@ int wd_get_pretimeout(watchdog_t wd, unsigned int *timeout);
 */
 int wd_set_pretimeout(watchdog_t wd, unsigned int timeout);
 
+/*
+    Get time left to reset system by WD
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT timeout - time left to reset
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+*/
+int wd_get_timeleft(watchdog_t wd, unsigned int *time);
+
 #endif

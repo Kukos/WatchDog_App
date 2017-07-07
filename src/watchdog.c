@@ -15,13 +15,16 @@
 #define WD_ERROR(fmt, err, ...) ERROR(fmt, err, ##__VA_ARGS__)
 
 
-watchdog_t wd_open(void)
+watchdog_t wd_open(const char *dev)
 {
+    char *wd;
     int fd;
 
-    fd = open(WD_DEV, O_RDWR);
+    dev ? (wd = (char *)dev) : (wd = (char *)WD_DEV);
+
+    fd = open(dev, O_RDWR);
     if (fd == -1)
-        WD_ERROR("Cannot open %s device\n", -1, WD_DEV);
+        WD_ERROR("Cannot open %s device\n", -1, dev);
 
     return fd;
 }

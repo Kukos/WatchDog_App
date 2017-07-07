@@ -7,13 +7,13 @@ typedef int watchdog_t;
     Open Watchdog device
 
     PARAMS
-    NO PARAMS
+    @IN dev - path to WD device
 
     RETURN
     -1 iff failure
     WD descriptior iff success
 */
-watchdog_t wd_open(void);
+watchdog_t wd_open(const char *dev);
 
 /*
     Close Watchdog device

@@ -7,7 +7,7 @@ int main(void)
     unsigned int timeout;
     int ret;
 
-    wd = wd_open();
+    wd = wd_open(NULL);
     if (wd == -1)
         return 1;
 

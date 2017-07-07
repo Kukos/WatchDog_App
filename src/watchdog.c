@@ -84,3 +84,29 @@ int wd_keepalive(watchdog_t wd)
 
     return 0;
 }
+
+int wd_get_pretimeout(watchdog_t wd, unsigned int *timeout)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_GETPRETIMEOUT, timeout);
+    if (ret)
+        WD_ERROR("Cannot get Watchdog timeout\n", ret, "");
+
+    return 0;
+}
+
+int wd_set_pretimeout(watchdog_t wd, unsigned int timeout)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_SETPRETIMEOUT, &timeout);
+    if (ret)
+        WD_ERROR("Cannot set Watchdog timeout\n", ret, "");
+
+    return 0;
+}

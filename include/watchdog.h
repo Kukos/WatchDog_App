@@ -65,4 +65,30 @@ int wd_set_timeout(watchdog_t wd, unsigned int timeout);
 */
 int wd_keepalive(watchdog_t wd);
 
+/*
+    Get PRE Timeout from WatchDog
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT timeout - WD pre timeout
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+*/
+int wd_get_pretimeout(watchdog_t wd, unsigned int *timeout);
+
+/*
+    Set PRE Watchdog Timeout
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @IN timeout - new WD pre timeout
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+*/
+int wd_set_pretimeout(watchdog_t wd, unsigned int timeout);
+
 #endif

@@ -13,12 +13,16 @@
 #define WD_CLOSE_MSG    "V"
 #define WD_DEV          "/dev/watchdog"
 #define WD_ERROR(fmt, err, ...) ERROR(fmt, err, ##__VA_ARGS__)
+#define WD_LOG(fmt, ...)        LOG(fmt, ##__VA_ARGS__)
+#define WD_TRACE(...)           TRACE(__VA_ARGS__)
 
 
 watchdog_t wd_open(const char *dev)
 {
     char *wd;
     int fd;
+
+    WD_TRACE("");
 
     dev ? (wd = (char *)dev) : (wd = (char *)WD_DEV);
 
@@ -31,6 +35,8 @@ watchdog_t wd_open(const char *dev)
 
 int wd_close(watchdog_t wd)
 {
+    WD_TRACE("");
+
     if (write(wd, WD_CLOSE_MSG, strlen(WD_CLOSE_MSG)) == -1)
         WD_ERROR("Cannot close Watchdog\n", 1, "");
 
@@ -44,6 +50,8 @@ int wd_gettimeout(watchdog_t wd, unsigned int *timeout)
 {
     int ret;
 
+    WD_TRACE("");
+
     ret = ioctl(wd, WDIOC_GETTIMEOUT, timeout);
     if (ret)
         WD_ERROR("Cannot get Watchdog timeout\n", ret, "");
@@ -54,6 +62,8 @@ int wd_gettimeout(watchdog_t wd, unsigned int *timeout)
 int wd_settimeout(watchdog_t wd, unsigned int timeout)
 {
     int ret;
+
+    WD_TRACE("");
 
     ret = ioctl(wd, WDIOC_SETTIMEOUT, &timeout);
     if (ret)

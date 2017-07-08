@@ -56,33 +56,35 @@ int my_getopt_long_only(int argc, char *const *argv, const char *short_opt, cons
 {
     int temp;
     int opt_size;
-    int i;
+    int opt_index;
 
     if (long_opt == NULL)
         return OPT_ERROR;
 
-    i = 0;
-    while (long_opt[i].name != NULL)
-        ++i;
-
-    opt_size = i;
+    opt_size = 0;
+    while (long_opt[opt_size].name != NULL)
+        ++opt_size;
 
     temp = getopt_long_only(argc, argv, short_opt, long_opt, index);
     if (temp == -1)
         return OPT_ERROR;
 
-    if (optind < argc)
+    if (optind > argc)
         return OPT_NO_MATCH;
 
     if (*index >= opt_size)
         return OPT_NO_MATCH;
 
+    opt_index = optind - 1;
+    if (long_opt[*index].has_arg == required_argument)
+        --opt_index;
+
     /* -option */
-    if (strcmp(long_opt[*index].name, argv[optind - 1] + 1) == 0)
+    if (strcmp(long_opt[*index].name, argv[opt_index] + 1) == 0)
         return temp;
 
     /* --option */
-    if (strcmp(long_opt[*index].name, argv[optind - 1] + 2) == 0)
+    if (strcmp(long_opt[*index].name, argv[opt_index] + 2) == 0)
         return temp;
 
     /* only part of word */
@@ -100,7 +102,7 @@ int main(int argc, char **argv)
 
     struct option long_option[] =
 	{
-        {"dev",             no_argument,        0,  OPT_DEVICE},
+        {"dev",             required_argument,  0,  OPT_DEVICE},
         {"get-timeout",     no_argument,        0,  OPT_GET_TIMEOUT},
         {"set-timeout",     required_argument,  0,  OPT_SET_TIMEOUT},
         {"get-pretimeout",  no_argument,        0,  OPT_GET_PRETIMEOUT},

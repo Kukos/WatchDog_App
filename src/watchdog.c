@@ -9,6 +9,7 @@
 #include <string.h>
 #include <common.h>
 #include <log.h>
+#include <inttypes.h>
 
 #define WD_CLOSE_MSG    "V"
 #define WD_DEV          "/dev/watchdog"
@@ -16,6 +17,15 @@
 #define WD_LOG(fmt, ...)        LOG(fmt, ##__VA_ARGS__)
 #define WD_TRACE(...)           TRACE(__VA_ARGS__)
 
+void wd_print_info(struct watchdog_info *wd_info)
+{
+    WD_TRACE("");
+
+    (void)printf("WD INFO\n");
+    (void)printf("WD Firmware:\t" "%" PRId32 "\n", wd_info->firmware_version);
+    (void)printf("WD Identity:\t%s\n", (char *)wd_info->identity);
+    wd_print_decoded_info((int)wd_info->options);
+}
 
 void wd_print_decoded_info(int info)
 {
@@ -231,6 +241,19 @@ int wd_set_options(watchdog_t wd, int options)
     ret = ioctl(wd, WDIOC_SETOPTIONS, &options);
     if (ret)
         WD_ERROR("Cannot set options\n", ret, "");
+
+    return 0;
+}
+
+int wd_get_info(watchdog_t wd, struct watchdog_info *wd_info)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_GETSUPPORT, wd_info);
+    if (ret)
+        WD_ERROR("Cannot get WatchDog info\n", ret, "");
 
     return 0;
 }

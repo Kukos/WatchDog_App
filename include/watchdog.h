@@ -1,6 +1,8 @@
 #ifndef WATCHDOG_H
 #define WATCHDOG_H
 
+#include <linux/watchdog.h>
+
 typedef int watchdog_t;
 
 /*
@@ -177,5 +179,28 @@ int wd_set_options(watchdog_t wd, int options);
 */
 void wd_print_decoded_info(int info);
 
+/*
+    Get WatchDog info
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT wd_info - watchdog info
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+*/
+int wd_get_info(watchdog_t wd, struct watchdog_info *wd_info);
+
+/*
+    Print WatchDog info
+
+    PARAMS
+    @IN info - pointer to WatchDog info
+
+    RETURN
+    This is a void function
+*/
+void wd_print_info(struct watchdog_info *wd_info);
 
 #endif

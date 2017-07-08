@@ -325,7 +325,7 @@ int main(int argc, char **argv)
             }
             case OPT_SET_OPTIONS:
             {
-                flag = atoi(optarg);
+                flag = (int)strtol(optarg, NULL, 16);
                 if (flag == 0 && *optarg != '0')
                 {
                     (void)fprintf(stderr, "Flag [%s] - Incorrect argument\n", optarg);

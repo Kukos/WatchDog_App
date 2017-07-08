@@ -1,6 +1,14 @@
 #ifndef WATCHDOG_H
 #define WATCHDOG_H
 
+/*
+    Simple Library to "talk" with HW WatchDog
+
+    Author: Michal Kukowski
+    email: michalkukowski10@gmail.com
+    LICENCE: GPL3.0
+*/
+
 #include <linux/watchdog.h>
 
 typedef int watchdog_t;

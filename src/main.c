@@ -1,3 +1,11 @@
+/*
+    Simple Application to "talk" with HW WatchDog
+
+    Author: Michal Kukowski
+    email: michalkukowski10@gmail.com
+    LICENCE: GPL3.0
+*/
+
 #include <stdio.h>
 #include <watchdog.h>
 #include <getopt.h>

@@ -27,55 +27,55 @@ void wd_print_info(struct watchdog_info *wd_info)
     (void)printf("WD INFO\n");
     (void)printf("WD Firmware:\t" "%" PRId32 "\n", wd_info->firmware_version);
     (void)printf("WD Identity:\t%s\n", (char *)wd_info->identity);
-    wd_print_decoded_info((int)wd_info->options);
+    wd_print_decoded_flag((int)wd_info->options);
 }
 
-void wd_print_decoded_info(int info)
+void wd_print_decoded_flag(int flag)
 {
     WD_TRACE("");
 
     (void)printf("WD FLAGS\n");
 
-    if (info == WDIOF_UNKNOWN)
+    if (flag == WDIOF_UNKNOWN)
     {
         (void)printf("\tUnknown flag error\n");
         return;
     }
 
-    if (GET_FLAG(info, WDIOF_OVERHEAT))
+    if (GET_FLAG(flag, WDIOF_OVERHEAT))
         (void)printf("\tReset due to CPU overheat\n");
 
-    if (GET_FLAG(info, WDIOF_FANFAULT))
+    if (GET_FLAG(flag, WDIOF_FANFAULT))
         (void)printf("\tFan failed\n");
 
-    if (GET_FLAG(info, WDIOF_EXTERN1))
+    if (GET_FLAG(flag, WDIOF_EXTERN1))
         (void)printf("\tExternal relay 1\n");
 
-    if (GET_FLAG(info, WDIOF_EXTERN2))
+    if (GET_FLAG(flag, WDIOF_EXTERN2))
         (void)printf("\tExternal relay 2\n");
 
-    if (GET_FLAG(info, WDIOF_POWERUNDER))
+    if (GET_FLAG(flag, WDIOF_POWERUNDER))
         (void)printf("\tPower bad/power fault\n");
 
-    if (GET_FLAG(info, WDIOF_CARDRESET))
+    if (GET_FLAG(flag, WDIOF_CARDRESET))
         (void)printf("\tCard previously reset the CPU\n");
 
-    if (GET_FLAG(info, WDIOF_POWEROVER))
+    if (GET_FLAG(flag, WDIOF_POWEROVER))
         (void)printf("\tPower over voltage\n");
 
-    if (GET_FLAG(info, WDIOF_SETTIMEOUT))
+    if (GET_FLAG(flag, WDIOF_SETTIMEOUT))
         (void)printf("\tSet timeout (in seconds)\n");
 
-    if (GET_FLAG(info, WDIOF_MAGICCLOSE))
+    if (GET_FLAG(flag, WDIOF_MAGICCLOSE))
         (void)printf("\tSupports magic close char\n");
 
-    if (GET_FLAG(info, WDIOF_PRETIMEOUT))
+    if (GET_FLAG(flag, WDIOF_PRETIMEOUT))
         (void)printf("\tPretimeout (in seconds), get/set\n");
 
-    if (GET_FLAG(info, WDIOF_ALARMONLY))
+    if (GET_FLAG(flag, WDIOF_ALARMONLY))
         (void)printf("\tWatchdog triggers external alarm not a reboot\n");
 
-    if (GET_FLAG(info, WDIOF_KEEPALIVEPING))
+    if (GET_FLAG(flag, WDIOF_KEEPALIVEPING))
         (void)printf("\tKeep alive ping reply\n");
 
 }

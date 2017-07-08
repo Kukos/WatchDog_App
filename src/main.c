@@ -2,6 +2,34 @@
 #include <watchdog.h>
 #include <getopt.h>
 #include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define WD_OPEN(wd, dev) \
+    __extension__ \
+    ({ \
+        int ______ret = wd; \
+        if (!is_open) \
+        { \
+            ______ret = wd_open(dev); \
+            if (______ret == -1) \
+                return 1; \
+            is_open = false; \
+        } \
+        ______ret; \
+    })
+
+#define WD_CLOSE(wd) \
+    __extension__ \
+    ({ \
+        int ______ret = 0; \
+        if (is_open) \
+        { \
+            ______ret = wd_close(wd); \
+            is_open = false; \
+        } \
+        ______ret; \
+    })
 
 enum {
     OPT_DEVICE          = 1000,
@@ -57,6 +85,7 @@ int my_getopt_long_only(int argc, char *const *argv, const char *short_opt, cons
     int temp;
     int opt_size;
     int opt_index;
+    int _index;
 
     if (long_opt == NULL)
         return OPT_ERROR;
@@ -65,26 +94,29 @@ int my_getopt_long_only(int argc, char *const *argv, const char *short_opt, cons
     while (long_opt[opt_size].name != NULL)
         ++opt_size;
 
-    temp = getopt_long_only(argc, argv, short_opt, long_opt, index);
+    temp = getopt_long_only(argc, argv, short_opt, long_opt, &_index);
+    if (index != NULL)
+        *index = _index;
+
     if (temp == -1)
         return OPT_ERROR;
 
     if (optind > argc)
         return OPT_NO_MATCH;
 
-    if (*index >= opt_size)
+    if (_index >= opt_size)
         return OPT_NO_MATCH;
 
     opt_index = optind - 1;
-    if (long_opt[*index].has_arg == required_argument)
+    if (long_opt[_index].has_arg == required_argument)
         --opt_index;
 
     /* -option */
-    if (strcmp(long_opt[*index].name, argv[opt_index] + 1) == 0)
+    if (strcmp(long_opt[_index].name, argv[opt_index] + 1) == 0)
         return temp;
 
     /* --option */
-    if (strcmp(long_opt[*index].name, argv[opt_index] + 2) == 0)
+    if (strcmp(long_opt[_index].name, argv[opt_index] + 2) == 0)
         return temp;
 
     /* only part of word */
@@ -93,13 +125,20 @@ int my_getopt_long_only(int argc, char *const *argv, const char *short_opt, cons
 
 int main(int argc, char **argv)
 {
-    //watchdog_t wd;
-    //unsigned int timeout;
-    //int ret;
-    //char *dev = NULL;
+    /* logic */
     int i;
-    int index;
+    bool is_open = false;
+    int ret;
 
+    /* WD parameters */
+    watchdog_t wd;
+    unsigned int timeout;
+    char *dev = NULL;
+    int flag;
+    int temperature;
+    struct watchdog_info info;
+
+    /* options */
     struct option long_option[] =
 	{
         {"dev",             required_argument,  0,  OPT_DEVICE},
@@ -118,6 +157,7 @@ int main(int argc, char **argv)
         {NULL,              0,                  0,  0}
     };
 
+    /* no error msg */
     opterr = 0;
     if (argc < 2)
     {
@@ -125,79 +165,204 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    while ((i = my_getopt_long_only(argc, argv, "", long_option, &index)) != -1)
+    while ((i = my_getopt_long_only(argc, argv, "", long_option, NULL)) != -1)
     {
         switch (i)
         {
             case OPT_DEVICE:
             {
-                (void)printf("Device\n");
+                dev = optarg;
                 break;
             }
             case OPT_GET_TIMEOUT:
             {
-                (void)printf("GetTimeout\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_timeout(wd, &timeout);
+                if (ret)
+                    return 1;
+
+                (void)printf("WD Timeout = %d [s]\n", timeout);
+
                 break;
             }
             case OPT_SET_TIMEOUT:
             {
-                (void)printf("SetTimeout\n");
+                timeout = (unsigned int)atoi(optarg);
+                if (timeout == 0 && *optarg != '0')
+                {
+                    (void)fprintf(stderr, "Timeout [%s] - Incorrect argument\n", optarg);
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                wd = WD_OPEN(wd, dev);
+                ret = wd_set_timeout(wd, timeout);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("Timeout set to %u\n", timeout);
+
                 break;
             }
             case OPT_GET_PRETIMEOUT:
             {
-                (void)printf("GetPreTimeout\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_pretimeout(wd, &timeout);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("WD PreTimeout = %d [s]\n", timeout);
+
                 break;
             }
             case OPT_SET_PRETIMEOUT:
             {
-                (void)printf("SetPreTimeout\n");
+                timeout = (unsigned int)atoi(optarg);
+                if (timeout == 0 && *optarg != '0')
+                {
+                    (void)fprintf(stderr, "PreTimeout [%s] - Incorrect argument\n", optarg);
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                wd = WD_OPEN(wd, dev);
+                ret = wd_set_pretimeout(wd, timeout);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("PreTimeout set to %u\n", timeout);
+
                 break;
             }
             case OPT_KEEPALIVE:
             {
-                (void)printf("KeepAlive\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_keepalive(wd);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("Watchdog fed\n");
+
                 break;
             }
             case OPT_GET_TIMELEFT:
             {
-                (void)printf("GetTimeLeft\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_timeleft(wd, &timeout);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("WD Time left to reset = %d [s]\n", timeout);
+
                 break;
             }
             case OPT_GET_BOOTSTATUS:
             {
-                (void)printf("GetBootStatus\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_bootstatus(wd, &flag);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("WD Boot Status:\n");
+                wd_print_decoded_flag(flag);
+
                 break;
             }
             case OPT_GET_STATUS:
             {
-                (void)printf("GetStatus\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_status(wd, &flag);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("WD Status:\n");
+                wd_print_decoded_flag(flag);
+
                 break;
             }
             case OPT_GET_TEMP:
             {
-                (void)printf("GetTemp\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_temp(wd, &temperature);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("Temperature = %d [F]\n", temperature);
+
                 break;
             }
             case OPT_SET_OPTIONS:
             {
-                (void)printf("SetOptions\n");
+                flag = atoi(optarg);
+                if (flag == 0 && *optarg != '0')
+                {
+                    (void)fprintf(stderr, "Flag [%s] - Incorrect argument\n", optarg);
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                wd = WD_OPEN(wd, dev);
+                ret = wd_set_options(wd, flag);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                (void)printf("Option set to %#x\n", flag);
+
                 break;
             }
             case OPT_GET_INFO:
             {
-                (void)printf("GetInfo\n");
+                wd = WD_OPEN(wd, dev);
+                ret = wd_get_info(wd, &info);
+                if (ret)
+                {
+                    WD_CLOSE(wd);
+                    return 1;
+                }
+
+                wd_print_info(&info);
+                wd_print_decoded_flag(flag);
+
                 break;
             }
             case OPT_HELP:
             {
-                (void)printf("Help\n");
+                usage();
                 break;
             }
             default:
                 usage();
         }
     }
+
+    WD_CLOSE(wd);
 
     return 0;
 }

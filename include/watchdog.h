@@ -169,15 +169,15 @@ int wd_get_temp(watchdog_t wd, int *temp);
 int wd_set_options(watchdog_t wd, int options);
 
 /*
-    Decode given info (set of bits) to human format (print string)
+    Decode given flag (set of bits) to human format (print string)
 
     PARAMS
-    @IN info - set of bits
+    @IN flag - set of bits
 
     RETURN
     This is a void function
 */
-void wd_print_decoded_info(int info);
+void wd_print_decoded_flag(int flag);
 
 /*
     Get WatchDog info

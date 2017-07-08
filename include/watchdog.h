@@ -116,7 +116,7 @@ int wd_get_timeleft(watchdog_t wd, unsigned int *time);
     Non-zero iff failure
 
 */
-int wd_get_bootstatus(watchdog_t wd, unsigned int *status);
+int wd_get_bootstatus(watchdog_t wd, int *status);
 
 /*
     Get Status from WatchDog
@@ -130,7 +130,7 @@ int wd_get_bootstatus(watchdog_t wd, unsigned int *status);
     Non-zero iff failure
 
 */
-int wd_get_status(watchdog_t wd, unsigned int *status);
+int wd_get_status(watchdog_t wd, int *status);
 
 /*
     Get Temperature in degrees fahrenheit from WatchDog
@@ -155,6 +155,6 @@ int wd_get_temp(watchdog_t wd, int *temp);
     RETURN
     This is a void function
 */
-void wd_print_decoded_info(unsigned int info);
+void wd_print_decoded_info(int info);
 
 #endif

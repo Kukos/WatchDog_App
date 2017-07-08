@@ -17,13 +17,13 @@
 #define WD_TRACE(...)           TRACE(__VA_ARGS__)
 
 
-void wd_print_decoded_info(unsigned int info)
+void wd_print_decoded_info(int info)
 {
     WD_TRACE("");
 
     (void)printf("WD FLAGS\n");
 
-    if ((int)info == WDIOF_UNKNOWN)
+    if (info == WDIOF_UNKNOWN)
     {
         (void)printf("\tUnknown flag error\n");
         return;
@@ -174,7 +174,7 @@ int wd_get_timeleft(watchdog_t wd, unsigned int *time)
     return 0;
 }
 
-int wd_get_bootstatus(watchdog_t wd, unsigned int *status)
+int wd_get_bootstatus(watchdog_t wd, int *status)
 {
     int ret;
 
@@ -187,7 +187,7 @@ int wd_get_bootstatus(watchdog_t wd, unsigned int *status)
     return 0;
 }
 
-int wd_get_status(watchdog_t wd, unsigned int *status)
+int wd_get_status(watchdog_t wd, int *status)
 {
     int ret;
 

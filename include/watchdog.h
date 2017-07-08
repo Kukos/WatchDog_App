@@ -147,6 +147,26 @@ int wd_get_status(watchdog_t wd, int *status);
 int wd_get_temp(watchdog_t wd, int *temp);
 
 /*
+    Set Watchfog options
+
+    AVAILABLE: (from <linux/watchdog.h>)
+
+    #define	WDIOS_DISABLECARD	0x0001	 Turn off the watchdog timer
+    #define	WDIOS_ENABLECARD	0x0002	 Turn on the watchdog timer
+    #define	WDIOS_TEMPPANIC		0x0004	 Kernel panic on temperature trip
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @IN option - new options
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+
+*/
+int wd_set_options(watchdog_t wd, int options);
+
+/*
     Decode given info (set of bits) to human format (print string)
 
     PARAMS
@@ -156,5 +176,6 @@ int wd_get_temp(watchdog_t wd, int *temp);
     This is a void function
 */
 void wd_print_decoded_info(int info);
+
 
 #endif

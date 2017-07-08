@@ -212,3 +212,25 @@ int wd_get_temp(watchdog_t wd, int *temp)
 
     return 0;
 }
+
+int wd_set_options(watchdog_t wd, int options)
+{
+    int temp;
+    int ret;
+
+    WD_TRACE("");
+
+    temp = options;
+    if (temp == WDIOS_UNKNOWN)
+        WD_ERROR("Unknown option\n", 1, "");
+
+    CLEAR_FLAG(temp, WDIOS_DISABLECARD | WDIOS_ENABLECARD | WDIOS_TEMPPANIC);
+    if (temp)
+        ERROR("Incorrect option\n", 1, "");
+
+    ret = ioctl(wd, WDIOC_SETOPTIONS, &options);
+    if (ret)
+        WD_ERROR("Cannot set options\n", ret, "");
+
+    return 0;
+}

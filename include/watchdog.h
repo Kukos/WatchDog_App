@@ -104,4 +104,43 @@ int wd_set_pretimeout(watchdog_t wd, unsigned int timeout);
 */
 int wd_get_timeleft(watchdog_t wd, unsigned int *time);
 
+/*
+    Get Bootstatus from WatchDog
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT status - bootstatus
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+
+*/
+int wd_get_bootstatus(watchdog_t wd, unsigned int *status);
+
+/*
+    Get Status from WatchDog
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT status - status
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+
+*/
+int wd_get_status(watchdog_t wd, unsigned int *status);
+
+/*
+    Decode given info (set of bits) to human format (print string)
+
+    PARAMS
+    @IN info - set of bits
+
+    RETURN
+    This is a void function
+*/
+void wd_print_decoded_info(unsigned int info);
+
 #endif

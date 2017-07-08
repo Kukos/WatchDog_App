@@ -17,6 +17,56 @@
 #define WD_TRACE(...)           TRACE(__VA_ARGS__)
 
 
+void wd_print_decoded_info(unsigned int info)
+{
+    WD_TRACE("");
+
+    (void)printf("WD FLAGS\n");
+
+    if ((int)info == WDIOF_UNKNOWN)
+    {
+        (void)printf("\tUnknown flag error\n");
+        return;
+    }
+
+    if (GET_FLAG(info, WDIOF_OVERHEAT))
+        (void)printf("\tReset due to CPU overheat\n");
+
+    if (GET_FLAG(info, WDIOF_FANFAULT))
+        (void)printf("\tFan failed\n");
+
+    if (GET_FLAG(info, WDIOF_EXTERN1))
+        (void)printf("\tExternal relay 1\n");
+
+    if (GET_FLAG(info, WDIOF_EXTERN2))
+        (void)printf("\tExternal relay 2\n");
+
+    if (GET_FLAG(info, WDIOF_POWERUNDER))
+        (void)printf("\tPower bad/power fault\n");
+
+    if (GET_FLAG(info, WDIOF_CARDRESET))
+        (void)printf("\tCard previously reset the CPU\n");
+
+    if (GET_FLAG(info, WDIOF_POWEROVER))
+        (void)printf("\tPower over voltage\n");
+
+    if (GET_FLAG(info, WDIOF_SETTIMEOUT))
+        (void)printf("\tSet timeout (in seconds)\n");
+
+    if (GET_FLAG(info, WDIOF_MAGICCLOSE))
+        (void)printf("\tSupports magic close char\n");
+
+    if (GET_FLAG(info, WDIOF_PRETIMEOUT))
+        (void)printf("\tPretimeout (in seconds), get/set\n");
+
+    if (GET_FLAG(info, WDIOF_ALARMONLY))
+        (void)printf("\tWatchdog triggers external alarm not a reboot\n");
+
+    if (GET_FLAG(info, WDIOF_KEEPALIVEPING))
+        (void)printf("\tKeep alive ping reply\n");
+
+}
+
 watchdog_t wd_open(const char *dev)
 {
     char *wd;
@@ -120,6 +170,32 @@ int wd_get_timeleft(watchdog_t wd, unsigned int *time)
     ret = ioctl(wd, WDIOC_GETTIMELEFT, time);
     if (ret)
         WD_ERROR("Cannot get time left to reset by Watchdog\n", ret, "");
+
+    return 0;
+}
+
+int wd_get_bootstatus(watchdog_t wd, unsigned int *status)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_GETBOOTSTATUS, status);
+    if (ret)
+        WD_ERROR("Cannot get Bootstatus\n", ret, "");
+
+    return 0;
+}
+
+int wd_get_status(watchdog_t wd, unsigned int *status)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_GETSTATUS, status);
+    if (ret)
+        WD_ERROR("Cannot get Status\n", ret, "");
 
     return 0;
 }

@@ -199,3 +199,16 @@ int wd_get_status(watchdog_t wd, unsigned int *status)
 
     return 0;
 }
+
+int wd_get_temp(watchdog_t wd, int *temp)
+{
+    int ret;
+
+    WD_TRACE("");
+
+    ret = ioctl(wd, WDIOC_GETTEMP, temp);
+    if (ret)
+        WD_ERROR("Cannot get Temperature\n", ret, "");
+
+    return 0;
+}

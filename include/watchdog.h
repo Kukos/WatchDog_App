@@ -133,6 +133,20 @@ int wd_get_bootstatus(watchdog_t wd, unsigned int *status);
 int wd_get_status(watchdog_t wd, unsigned int *status);
 
 /*
+    Get Temperature in degrees fahrenheit from WatchDog
+
+    PARAMS
+    @IN wd - watchdog descriptor
+    @OUT temp - temperatue
+
+    RETURN
+    0 iff success
+    Non-zero iff failure
+
+*/
+int wd_get_temp(watchdog_t wd, int *temp);
+
+/*
     Decode given info (set of bits) to human format (print string)
 
     PARAMS

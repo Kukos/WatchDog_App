@@ -21,6 +21,9 @@ void wd_print_info(struct watchdog_info *wd_info)
 {
     WD_TRACE("");
 
+    if (wd_info == NULL)
+        return;
+
     (void)printf("WD INFO\n");
     (void)printf("WD Firmware:\t" "%" PRId32 "\n", wd_info->firmware_version);
     (void)printf("WD Identity:\t%s\n", (char *)wd_info->identity);
@@ -97,6 +100,9 @@ int wd_close(watchdog_t wd)
 {
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
     if (write(wd, WD_CLOSE_MSG, strlen(WD_CLOSE_MSG)) == -1)
         WD_ERROR("Cannot close Watchdog\n", 1, "");
 
@@ -112,6 +118,12 @@ int wd_get_timeout(watchdog_t wd, unsigned int *timeout)
 
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (timeout == NULL)
+        ERROR("timeout == NULL\n", 1, "");
+
     ret = ioctl(wd, WDIOC_GETTIMEOUT, timeout);
     if (ret)
         WD_ERROR("Cannot get Watchdog timeout\n", ret, "");
@@ -124,6 +136,9 @@ int wd_set_timeout(watchdog_t wd, unsigned int timeout)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
 
     ret = ioctl(wd, WDIOC_SETTIMEOUT, &timeout);
     if (ret)
@@ -138,6 +153,9 @@ int wd_keepalive(watchdog_t wd)
 
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
     ret = ioctl(wd, WDIOC_KEEPALIVE, NULL);
     if (ret)
         WD_ERROR("Cannot feed watchdog\n", ret, "");
@@ -150,6 +168,12 @@ int wd_get_pretimeout(watchdog_t wd, unsigned int *timeout)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (timeout == NULL)
+        ERROR("Timeout == NULL\n", 1, "");
 
     ret = ioctl(wd, WDIOC_GETPRETIMEOUT, timeout);
     if (ret)
@@ -164,6 +188,9 @@ int wd_set_pretimeout(watchdog_t wd, unsigned int timeout)
 
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
     ret = ioctl(wd, WDIOC_SETPRETIMEOUT, &timeout);
     if (ret)
         WD_ERROR("Cannot set Watchdog pretimeout\n", ret, "");
@@ -176,6 +203,12 @@ int wd_get_timeleft(watchdog_t wd, unsigned int *time)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (time == NULL)
+        ERROR("time == NULL\n", 1, "");
 
     ret = ioctl(wd, WDIOC_GETTIMELEFT, time);
     if (ret)
@@ -190,6 +223,12 @@ int wd_get_bootstatus(watchdog_t wd, int *status)
 
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (status == NULL)
+        ERROR("status == NULL\n", 1, "");
+
     ret = ioctl(wd, WDIOC_GETBOOTSTATUS, status);
     if (ret)
         WD_ERROR("Cannot get Bootstatus\n", ret, "");
@@ -202,6 +241,12 @@ int wd_get_status(watchdog_t wd, int *status)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (status == NULL)
+        ERROR("status == NULL\n", 1, "");
 
     ret = ioctl(wd, WDIOC_GETSTATUS, status);
     if (ret)
@@ -216,6 +261,12 @@ int wd_get_temp(watchdog_t wd, int *temp)
 
     WD_TRACE("");
 
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (temp == NULL)
+        ERROR("temp == NULL\n", 1, "");
+
     ret = ioctl(wd, WDIOC_GETTEMP, temp);
     if (ret)
         WD_ERROR("Cannot get Temperature\n", ret, "");
@@ -229,6 +280,9 @@ int wd_set_options(watchdog_t wd, int options)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
 
     temp = options;
     if (temp == WDIOS_UNKNOWN)
@@ -250,6 +304,12 @@ int wd_get_info(watchdog_t wd, struct watchdog_info *wd_info)
     int ret;
 
     WD_TRACE("");
+
+    if (wd == -1)
+        ERROR("Incorrect WatchDog descriptor\n", 1, "");
+
+    if (wd_info == NULL)
+        ERROR("wd_info == NULL\n", 1, "");
 
     ret = ioctl(wd, WDIOC_GETSUPPORT, wd_info);
     if (ret)

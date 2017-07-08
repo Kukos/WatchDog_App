@@ -89,9 +89,9 @@ watchdog_t wd_open(const char *dev)
 
     dev ? (wd = (char *)dev) : (wd = (char *)WD_DEV);
 
-    fd = open(dev, O_RDWR);
+    fd = open(wd, O_RDWR);
     if (fd == -1)
-        WD_ERROR("Cannot open %s device\n", -1, dev);
+        WD_ERROR("Cannot open %s device\n", -1, wd);
 
     return fd;
 }

@@ -39,8 +39,8 @@ HELP
 
 Examples
 
-./watchdog --dev /dev/watchdog0 --set-timeout 8
+./watchdog.out --dev /dev/watchdog0 --set-timeout 8
 
-./watchdog --set-options 0x3
+./watchdog.out --set-options 0x3
 
-./watchdog --get-info --get-temp --get-bootstatus --get-timeleft
+./watchdog.out --get-info --get-temp --get-bootstatus --get-timeleft

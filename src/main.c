@@ -82,9 +82,9 @@ void usage(void)
     (void)printf("--help\t\t\t- print this usage\n");
     (void)printf("\n");
     (void)printf("Examples\n");
-    (void)printf("./watchdog --dev /dev/watchdog0 --set-timeout 8\n");
-    (void)printf("./watchdog --set-options 0x3\n");
-    (void)printf("./watchdog --get-info --get-temp --get-bootstatus --get-timeleft\n");
+    (void)printf("./watchdog.out --dev /dev/watchdog0 --set-timeout 8\n");
+    (void)printf("./watchdog.out --set-options 0x3\n");
+    (void)printf("./watchdog.out --get-info --get-temp --get-bootstatus --get-timeleft\n");
     (void)printf("\n");
 }
 

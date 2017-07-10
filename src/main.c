@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     int ret;
 
     /* WD parameters */
-    watchdog_t wd;
+    watchdog_t wd = -1;
     unsigned int timeout;
     char *dev = NULL;
     int flag;

@@ -22,7 +22,7 @@
             ______ret = wd_open(dev); \
             if (______ret == -1) \
                 return 1; \
-            is_open = false; \
+            is_open = true; \
         } \
         ______ret; \
     })
@@ -114,6 +114,9 @@ int my_getopt_long_only(int argc, char *const *argv, const char *short_opt, cons
 
     if (_index >= opt_size)
         return OPT_NO_MATCH;
+
+    if (_index < 0)
+        return OPT_ERROR;
 
     opt_index = optind - 1;
     if (long_opt[_index].has_arg == required_argument)

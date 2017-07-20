@@ -8,7 +8,7 @@ CCWARNINGS := 	-Wall -Wextra -pedantic -Wcast-align \
 				-Wmissing-prototypes -Wswitch-default -Wbad-function-cast \
 				-Wnested-externs -Wconversion -Wunreachable-code
 
-CFLAGS := -std=gnu99 $(CCWARNINGS) -Werror -O3 -DASSERT -rdynamic
+CFLAGS := -std=gnu99 $(CCWARNINGS) -O3
 
 PROJECT_DIR := $(shell pwd)
 
